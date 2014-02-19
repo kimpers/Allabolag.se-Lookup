@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.2'
 gem 'mysql2'
 group :development, :test do
-  gem 'rspec-rails', '2.13.1'
+  gem 'rspec-rails'
 end
 
 group :test do
