@@ -14,7 +14,7 @@ describe "Home page" do
   end
   describe "Search" do
     before(:each) do
-      @attributes = {:query => "Company AB", :result => "CMP"}
+      @attributes = {:company_name => "Company AB", :org_number => "123456-4321"}
       Search.create(@attributes)
       visit root_path
     end

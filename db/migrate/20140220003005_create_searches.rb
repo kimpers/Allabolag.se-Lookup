@@ -1,8 +1,8 @@
 class CreateSearches < ActiveRecord::Migration
   def change
     create_table :searches do |t|
-      t.string :query
-      t.string :result
+      t.string :company_name
+      t.string :org_number
 
       t.timestamps
     end

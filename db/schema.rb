@@ -11,11 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140220003005) do
+ActiveRecord::Schema.define(version: 20140222194010) do
 
   create_table "searches", force: true do |t|
-    t.string   "query"
-    t.string   "result"
+    t.string   "company_name"
+    t.string   "org_number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

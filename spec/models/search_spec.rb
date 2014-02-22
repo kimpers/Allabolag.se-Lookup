@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe Search do
   before(:each) do
-    @attributes = {:query => "Company AB", :result => "CMP"}
-    @apoex = {:query => 'Apoex ab', :result => '556633-4149'}
+    @attributes = {:company_name => "Company AB", :org_number => "CMP"}
+    @apoex = {:company_name => 'Apoex ab', :org_number => '556633-4149'}
   end
 
   it 'should find apoex ab on allabolag' do
-    s = Search.do_search(@apoex[:query])
-    s.result.should be_an_eql @apoex[:result]
+    s = Search.do_search(@apoex[:company_name])
+    s.org_number.should be_an_eql @apoex[:org_number]
 
   end
 
   it 'should find an existing user with search method' do
     Search.create(@attributes)
-    s = Search.do_search(@attributes[:query])
+    s = Search.do_search(@attributes[:company_name])
     s.should_not be_blank
   end
   it 'should create a non existing search by parsing website' do
@@ -26,11 +26,11 @@ describe Search do
 
   it 'should find already created search' do
     Search.create(@attributes)
-    Search.find_by_query(@attributes[:query]).should be_valid
+    Search.find_by_company_name(@attributes[:company_name]).should be_valid
   end
 
   it 'should not find non existing search' do
-    Search.find_by_query("Fake company").should be_blank
+    Search.find_by_company_name("Fake company").should be_blank
   end
 
 

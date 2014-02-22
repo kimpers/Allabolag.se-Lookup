@@ -3,13 +3,13 @@ class Search < ActiveRecord::Base
   require "uri"
 
   def self.do_search(query)
-    results = Search.find_by_query(query)
+    results = Search.find_by_company_name(query)
     if results.blank?
       search_results = parse_website(query);
       if not search_results.blank?
         results = Search.new
-        results.query = search_results[:name]
-        results.result = search_results[:org_number]
+        results.company_name = search_results[:name]
+        results.org_number = search_results[:org_number]
         results.save
       end
     end
