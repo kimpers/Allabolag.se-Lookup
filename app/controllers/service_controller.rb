@@ -4,18 +4,15 @@ class ServiceController < ApplicationController
     @search = NIL
   end
 
-  def search
-    puts params[:q]
-    @search = Search.find_by_query(params[:q])
+  def results
+    puts "in results method"
+    @search = Search.do_search(params[:q])
     if @search.blank?
-      puts "empty need to create"
-      @search = Search.new
-      @search.query = params[:q]
-      @search.save
+      puts "empty need to do search"
     else
       puts "found object"
+
     end
 
-    redirect_to root_path
   end
 end

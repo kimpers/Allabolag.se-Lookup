@@ -1,0 +1,8 @@
+<h1>Results</h1>
+<div class="container">
+  <% if (@search.blank?) %>
+      No results
+  <% else %>
+    <%= @search.query %> : <%= @search.result %>
+   <% end %>
+</div>

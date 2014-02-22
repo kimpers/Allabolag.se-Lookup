@@ -12,4 +12,17 @@ describe "Home page" do
       expect(page).to have_link('Index', href: root_path)
     end
   end
+  describe "Search" do
+    before(:each) do
+      @attributes = {:query => "Company AB", :result => "CMP"}
+      Search.create(@attributes)
+      visit root_path
+    end
+    it "should return a correct value for existing company"
+      pending 'should test form submission and response'
+
+    it "should return no results for a not in either database or on allabolag.se company"
+      pending 'should test form submission and response'
+
+  end
 end
