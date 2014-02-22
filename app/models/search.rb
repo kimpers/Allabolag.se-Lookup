@@ -3,6 +3,9 @@ class Search < ActiveRecord::Base
   require "uri"
 
   def self.do_search(query)
+    if query.blank?
+      return NIL
+    end
     results = Search.find_by_company_name(query)
     if results.blank?
       search_results = parse_website(query);
@@ -30,12 +33,10 @@ class Search < ActiveRecord::Base
       return NIL
     end
     url = url.gsub('"', '')
-    puts 'Sub page url '+ url
     response = Net::HTTP.get_response(URI.parse(url))
     name_correct_capitalization = response.body[/#{query}/i]
     org_number_row = response.body[/(?<=ORG\.NR).+/i]
     org_number = org_number_row[/\d{6}-\d{4}/]
-    puts name_correct_capitalization + '' + org_number
     # Make sure we don't get any semi parsed results
     if name_correct_capitalization.blank? || org_number.blank?
       return NIL

@@ -2,6 +2,8 @@ AllaBolag::Application.routes.draw do
   #get "service/index" => 'service#index'
   root 'service#index'
   post 'results' => 'service#results'
+  # Also allow get requests to avoid having to deal with authenticity token in client
+  get 'results' => 'service#results'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

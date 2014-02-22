@@ -5,8 +5,7 @@ class ServiceController < ApplicationController
   end
 
   def results
-    puts "in results method"
-    @search = Search.do_search(params[:q])
+    @search = Search.do_search(params[:company_name])
     if not @search.blank?
       if (params[:output_format] == 'json')
         render :json  => @search, :except => [:id, :created_at, :updated_at]
