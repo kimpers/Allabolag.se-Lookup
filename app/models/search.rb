@@ -1,6 +1,6 @@
 class Search < ActiveRecord::Base
-  require "net/http"
-  require "uri"
+  require 'net/http'
+  require 'uri'
 
   def self.do_search(query)
     if query.blank?
@@ -8,7 +8,7 @@ class Search < ActiveRecord::Base
     end
     results = Search.find_by_company_name(query)
     if results.blank?
-      search_results = parse_website(query);
+      search_results = parse_website(query)
       if not search_results.blank?
         results = Search.new
         results.company_name = search_results[:name]

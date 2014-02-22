@@ -1,9 +1,9 @@
 <h1>Allabolag.se lookup</h1>
 <p>Hello</p>
 
-<%= form_tag("/results", method: "post") do %>
-    <%= label_tag(:company_name, "Search for:") %>
+<%= form_tag('/results', method: 'post') do %>
+    <%= label_tag(:company_name, 'Search for:') %>
     <%= text_field_tag(:company_name) %>
     <%= select_tag(:output_format, options_for_select([['Plain text', 'text'],['JSON format', 'json'],['XML format', 'xml']])) %>
-    <%= submit_tag("Search") %>
+    <%= submit_tag('Search') %>
 <% end %>

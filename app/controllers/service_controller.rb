@@ -1,6 +1,6 @@
 class ServiceController < ApplicationController
   def index
-    @title = "Allabolag.se request service"
+    @title = 'Allabolag.se request service'
     @search = NIL
   end
 

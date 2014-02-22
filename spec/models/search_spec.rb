@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Search do
   before(:each) do
-    @attributes = {:company_name => "Company AB", :org_number => "123456-4321"}
+    @attributes = {:company_name => 'Company AB', :org_number => '123456-4321'}
     @valid_company = {:company_name => 'Google Sweden AB', :org_number => '556656-6880'}
   end
 
@@ -32,7 +32,7 @@ describe Search do
   end
 
   it 'should not find non existing search' do
-    Search.find_by_company_name("Fake company").should be_blank
+    Search.find_by_company_name('Fake company').should be_blank
   end
 
 
