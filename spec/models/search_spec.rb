@@ -3,7 +3,15 @@ require 'spec_helper'
 describe Search do
   before(:each) do
     @attributes = {:query => "Company AB", :result => "CMP"}
+    @apoex = {:query => 'Apoex ab', :result => '556633-4149'}
   end
+
+  it 'should find apoex ab on allabolag' do
+    s = Search.do_search(@apoex[:query])
+    s.result.should be_an_eql @apoex[:result]
+
+  end
+
   it 'should find an existing user with search method' do
     Search.create(@attributes)
     s = Search.do_search(@attributes[:query])
@@ -23,5 +31,7 @@ describe Search do
 
   it 'should not find non existing search' do
     Search.find_by_query("Fake company").should be_blank
-end
+  end
+
+
 end

@@ -4,5 +4,6 @@
 <%= form_tag("/results", method: "post") do %>
     <%= label_tag(:q, "Search for:") %>
     <%= text_field_tag(:q) %>
+    <%= select_tag(:output_format, options_for_select([['Plain text', 'text'],['JSON format', 'json'],['XML format', 'xml']])) %>
     <%= submit_tag("Search") %>
 <% end %>

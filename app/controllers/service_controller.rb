@@ -7,12 +7,13 @@ class ServiceController < ApplicationController
   def results
     puts "in results method"
     @search = Search.do_search(params[:q])
-    if @search.blank?
-      puts "empty need to do search"
-    else
-      puts "found object"
-
+    if not @search.blank?
+      if (params[:output_format] == 'json')
+        render :json  => @search
+      elsif (params[:output_format] == 'xml')
+        render :xml  => @search
+      end
     end
-
   end
+
 end
