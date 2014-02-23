@@ -2,6 +2,8 @@ class Search < ActiveRecord::Base
   require 'net/http'
   require 'uri'
 
+  # Searches db first for cache org. number if none is found Allabolag.se is searched
+  # and search yields results it is cached in db before returned to user
   def self.do_search(query)
     if query.blank?
       return NIL
@@ -20,6 +22,7 @@ class Search < ActiveRecord::Base
   end
 
 
+  # Searches Allabolag.se for provided company name and returns results, returns NIL if search fails
   def self.parse_website(query)
     uri = URI.parse('http://www.allabolag.se')
     http = Net::HTTP.new(uri.host, uri.port)

@@ -6,7 +6,7 @@ describe Search do
     @valid_company = {:company_name => 'Google Sweden AB', :org_number => '556656-6880'}
   end
 
-  it 'should find apoex ab on allabolag' do
+  it 'should find Google on allabolag' do
     s = Search.do_search(@valid_company[:company_name])
     s.org_number.should be_an_eql @valid_company[:org_number]
 

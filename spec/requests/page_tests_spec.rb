@@ -3,7 +3,6 @@ require 'spec_helper'
 describe 'Home page' do
   describe 'GET /' do
     it 'should load correctly' do
-      # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
       visit root_path
       expect(page).to have_content('Allabolag.se')
     end
@@ -28,12 +27,12 @@ describe 'Search' do
   end
 
   it 'should return no results for a not in either database or on allabolag.se company' do
-    fill_in 'company_name', with: 'qwertyuiop'
+    fill_in 'company_name', with: 'notavalidcompany'
     click_button 'Search'
     page.should have_content('No results')
   end
 
-  it 'should return an json result' do
+  it 'should return a json result' do
     fill_in 'company_name', with: @attributes[:company_name]
     #noinspection RubyArgCount
     select 'JSON format', :from => 'output_format'

@@ -6,6 +6,8 @@ class Client
     @url = server_url
   end
 
+  # Searches with a GET request to service, parses response as JSON.
+  # If response is not a valid JSON then search did not return any results
   def search(name)
     uri = URI.parse(@url + "/results?&company_name=#{name.gsub(' ','+')}&output_format=json")
     response = Net::HTTP.get_response(uri)

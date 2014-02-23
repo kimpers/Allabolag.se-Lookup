@@ -14,5 +14,11 @@ class ClientTest < Test::Unit::TestCase
       org_number = client.search('notavalidcompany')
       assert_equal 'no results', org_number
     end
+
+    should "return no results when providing an empty query" do
+      client = Client.new('http://localhost:3000')
+      org_number = client.search('')
+      assert_equal 'no results', org_number
+    end
   end
 end
