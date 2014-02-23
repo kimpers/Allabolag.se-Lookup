@@ -3,7 +3,7 @@ class Search < ActiveRecord::Base
   require 'uri'
 
   # Searches db first for cache org. number if none is found Allabolag.se is searched
-  # and search yields results it is cached in db before returned to user
+  # and if search yields results it is cached in db before returned to user
   def self.do_search(query)
     if query.blank?
       return NIL
