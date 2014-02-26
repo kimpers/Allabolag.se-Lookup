@@ -16,6 +16,10 @@ class Client
     rescue JSON::ParserError
       return 'no results'
     else
+      # Return no results instead of just an empty string if nothing is found
+      if parsed_response['org_number'] == ''
+        return 'no results'
+      end
       return parsed_response['org_number']
     end
   end
