@@ -1,6 +1,8 @@
 class Search < ActiveRecord::Base
   require 'net/http'
   require 'uri'
+  require 'nokogiri'
+  require 'open-uri'
 
   # Searches db first for cache org. number if none is found Allabolag.se is searched
   # and if search yields results it is cached in db before returned to user
@@ -10,7 +12,7 @@ class Search < ActiveRecord::Base
     end
     results = Search.find_by_company_name(query)
     if results.blank?
-      search_results = parse_website(query)
+      search_results = parse_nokogiri(query)
       if not search_results.blank?
         results = Search.new
         results.company_name = search_results[:name]
@@ -22,28 +24,30 @@ class Search < ActiveRecord::Base
   end
 
 
-  # Searches Allabolag.se for provided company name and returns results, returns NIL if search fails
-  def self.parse_website(query)
-    uri = URI.parse('http://www.allabolag.se')
-    http = Net::HTTP.new(uri.host, uri.port)
-    response = http.get('/?what=' + query.gsub(' ','+'))
-    if response.body.blank?
+  # Searches Allabolag.se with Nokogiri
+  def self.parse_nokogiri(query)
+    uri = "http://www.allabolag.se/?what=#{query.gsub(' ','+')}"
+    doc = Nokogiri::HTML(open(uri))
+    a_hrefs = doc.css("td#hitlistName").css("a")
+
+# Do case insensitive regex matching because we want CoMPAny to match Company etc
+# And we don't want to rely on first match always being the correct one
+    title = NIL
+    url = NIL
+    a_hrefs.each do |link|
+      if link['title'] =~ /#{query}/i
+        title = link['title']
+        url = link['href']
+      end
+    end
+
+    if title.nil? || url.nil?
       return NIL
     end
-    # Get url to company sub page so information can be safely extracted without too complicated regexp
-    url = response.body[/(?<=<a href=).+(?=title="#{query}")/i]
-    if url.blank?
-      return NIL
-    end
-    url = url.gsub('"', '')
-    response = Net::HTTP.get_response(URI.parse(url))
-    name_correct_capitalization = response.body[/#{query}/i]
-    org_number_row = response.body[/(?<=ORG\.NR).+/i]
-    org_number = org_number_row[/\d{6}-\d{4}/]
-    # Make sure we don't get any semi parsed results
-    if name_correct_capitalization.blank? || org_number.blank?
-      return NIL
-    end
-    return {:name=> name_correct_capitalization, :org_number => org_number}
+
+    doc = Nokogiri::HTML(open(url))
+    org_nr = doc.css("span#printOrgnr").text
+
+    return {:name => title, :org_number => org_nr}
   end
 end

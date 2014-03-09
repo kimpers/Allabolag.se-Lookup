@@ -1,4 +1,4 @@
-class Client
+class AllabolagClient
   require 'net/http'
   require 'uri'
   require 'json'
@@ -29,6 +29,6 @@ if __FILE__ == $0
   name = ''
   $*.each { |x| name << x + ' ' }
   name.strip!
-  c = Client.new('http://localhost:3000')
+  c = AllabolagClient.new('http://localhost:3000')
   puts c.search(name)
 end
