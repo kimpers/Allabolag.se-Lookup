@@ -1,5 +1,4 @@
 require 'spec_helper'
-
 describe 'Home page' do
   describe 'GET /' do
     it 'should load correctly' do
@@ -20,18 +19,21 @@ describe 'Search' do
     Search.create(@attributes)
     visit root_path
   end
+  # VCR not needed, since company is already created in database no remote lookup will take place
   it 'should return a correct value for existing company' do
     fill_in 'company_name', with: @attributes[:company_name]
     click_button 'Search'
     page.should have_content(@attributes[:org_number])
   end
-
+  # VCR, since it does not exist in db a remote lookup will be used
   it 'should return no results for a not in either database or on allabolag.se company' do
-    fill_in 'company_name', with: 'notavalidcompany'
-    click_button 'Search'
-    page.should have_content('No results')
+    VCR.use_cassette("no_company_page_test") do
+      fill_in 'company_name', with: 'notavalidcompany'
+      click_button 'Search'
+      page.should have_content('No results')
+    end
   end
-
+  # VCR not needed, since company is already created in database no remote lookup will take place
   it 'should return a json result' do
     fill_in 'company_name', with: @attributes[:company_name]
     #noinspection RubyArgCount
@@ -40,6 +42,7 @@ describe 'Search' do
     page.should have_content("\"org_number\":\"#{@attributes[:org_number]}\"")
   end
 
+  # VCR not needed, since company is already created in database no remote lookup will take place
   it 'should return an xml result' do
     fill_in 'company_name', with: @attributes[:company_name]
     #noinspection RubyArgCount

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'vcr_setup'
 
 describe Search do
   before(:each) do
@@ -7,13 +8,17 @@ describe Search do
   end
 
   it 'should find Google on allabolag' do
-    s = Search.do_search(@valid_company[:company_name])
-    s.org_number.should be_an_eql @valid_company[:org_number]
+    VCR.use_cassette('google_search') do
+      s = Search.do_search(@valid_company[:company_name])
+      s.org_number.should be_an_eql @valid_company[:org_number]
+    end
 
   end
   it 'should not find anything when searching for a non existing company' do
-    s = Search.do_search('notavalidcompany')
-    s.should be_blank
+    VCR.use_cassette('no_company_do_search') do
+      s = Search.do_search('notavalidcompany')
+      s.should be_blank
+    end
   end
 
   it 'should find an existing user with search method' do

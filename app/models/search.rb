@@ -35,7 +35,7 @@ class Search < ActiveRecord::Base
     title = NIL
     url = NIL
     a_hrefs.each do |link|
-      if link['title'] =~ /#{query}/i
+      if link['title'] =~ /^#{query}$/i
         title = link['title']
         url = link['href']
       end
