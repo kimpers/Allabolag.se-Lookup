@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'allabolag_client'
-  s.version     = '0.1.0'
+  s.version     = '0.1.1'
   s.licenses    = ['MIT']
   s.summary     = 'AllabolagClient for AllaBolag web service'
   s.description = 'AllabolagClient for AllaBolag web service. Allows for fetching of organization number'

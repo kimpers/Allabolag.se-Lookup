@@ -8,19 +8,16 @@ class Search < ActiveRecord::Base
   # and if search yields results it is cached in db before returned to user
   def self.do_search(query)
     if query.blank?
-      return NIL
+      return []
     end
-    results = Search.find_by_company_name(query)
-    if results.blank?
-      search_results = parse_nokogiri(query)
-      if not search_results.blank?
-        results = Search.new
-        results.company_name = search_results[:name]
-        results.org_number = search_results[:org_number]
-        results.save
-      end
+    results = []
+    db_result = Search.find_by_company_name(query)
+    if db_result.blank?
+      results = parse_nokogiri(query)
+		else
+			results << db_result
     end
-    return results
+    results
   end
 
 
@@ -30,24 +27,21 @@ class Search < ActiveRecord::Base
     doc = Nokogiri::HTML(open(uri))
     a_hrefs = doc.css("td#hitlistName").css("a")
 
-# Do case insensitive regex matching because we want CoMPAny to match Company etc
-# And we don't want to rely on first match always being the correct one
-    title = NIL
-    url = NIL
+		hits = []
     a_hrefs.each do |link|
-      if link['title'] =~ /^#{query}$/i
-        title = link['title']
-        url = link['href']
+			if not link['title'].blank? and not link['href'].blank?
+				doc = Nokogiri::HTML(open(link['href']))
+				name = doc.css("span#printTitle").text
+				org_nr = doc.css("span#printOrgnr").text
+				if not org_nr.blank? and not name.blank?
+					s = Search.new({:company_name => name, :org_number => org_nr})
+					if not Search.exists?(company_name: s.company_name)
+						s.save
+					end
+					hits << s
+				end
       end
     end
-
-    if title.nil? || url.nil?
-      return NIL
-    end
-
-    doc = Nokogiri::HTML(open(url))
-    org_nr = doc.css("span#printOrgnr").text
-
-    return {:name => title, :org_number => org_nr}
+		hits
   end
 end

@@ -3,6 +3,10 @@
   <% if (@search.blank?) %>
       No results
   <% else %>
-    <%= @search.company_name %> : <%= @search.org_number %>
-   <% end %>
+		<ul>
+			<% @search.each do |search| %>
+				<li><%= search.company_name %> : <%= search.org_number %></li>
+			<% end %>
+		</ul>
+  <% end %>
 </div>

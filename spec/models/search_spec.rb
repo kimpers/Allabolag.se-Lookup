@@ -9,11 +9,16 @@ describe Search do
 
   it 'should find Google on allabolag' do
     VCR.use_cassette('google_search') do
-      s = Search.do_search(@valid_company[:company_name])
-      s.org_number.should be_an_eql @valid_company[:org_number]
+      results = Search.do_search(@valid_company[:company_name])
+			expect(results.find { |result| result[:org_number] == @valid_company[:org_number]})
     end
+	end
 
-  end
+	it "should find cached companies" do
+		s = Search.create!(@valid_company)
+		results = Search.do_search(@valid_company[:company_name])
+		results.first.should be_eql(s)
+	end
   it 'should not find anything when searching for a non existing company' do
     VCR.use_cassette('no_company_do_search') do
       s = Search.do_search('notavalidcompany')

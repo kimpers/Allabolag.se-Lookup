@@ -4,6 +4,7 @@ gem 'mysql2'
 group :development, :test do
   gem 'rspec-rails'
   gem 'vcr', '2.8.0'
+	gem 'debugger', '~> 1.6.6'
 end
 
 group :test do

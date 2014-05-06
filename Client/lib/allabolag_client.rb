@@ -16,11 +16,7 @@ class AllabolagClient
     rescue JSON::ParserError
       return 'no results'
     else
-      # Return no results instead of just an empty string if nothing is found
-      if parsed_response['org_number'] == ''
-        return 'no results'
-      end
-      return parsed_response['org_number']
+      return parsed_response
     end
   end
 end
@@ -30,5 +26,12 @@ if __FILE__ == $0
   $*.each { |x| name << x + ' ' }
   name.strip!
   c = AllabolagClient.new('http://localhost:3000')
-  puts c.search(name)
+  results = c.search(name)
+	if results.empty?
+		puts 'no results'
+	else
+		results.each do |result|
+			puts result["company_name"] + " " + result["org_number"]
+		end
+	end
 end
