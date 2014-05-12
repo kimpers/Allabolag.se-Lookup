@@ -11,11 +11,11 @@ class Search < ActiveRecord::Base
       return []
     end
     results = []
-    db_result = Search.find_by_company_name(query)
+		db_result = Search.where("company_name LIKE :prefix", prefix: "#{query}%")
     if db_result.blank?
       results = parse_nokogiri(query)
 		else
-			results << db_result
+			results = db_result
     end
     results
   end
