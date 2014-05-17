@@ -10,12 +10,9 @@ class Search < ActiveRecord::Base
     if query.blank?
       return []
     end
-    results = []
-		db_result = Search.where("company_name LIKE :prefix", prefix: "#{query}%")
-    if db_result.blank?
+		results = Search.where("company_name LIKE :prefix", prefix: "#{query}%")
+    if results.empty?
       results = parse_nokogiri(query)
-		else
-			results = db_result
     end
     results
   end
@@ -25,23 +22,27 @@ class Search < ActiveRecord::Base
   def self.parse_nokogiri(query)
     uri = "http://www.allabolag.se/?what=#{query.gsub(' ','+')}"
     doc = Nokogiri::HTML(open(uri))
-    a_hrefs = doc.css("td#hitlistName").css("a")
 
 		hits = []
-    a_hrefs.each do |link|
-			if not link['title'].blank? and not link['href'].blank?
-				doc = Nokogiri::HTML(open(link['href']))
-				name = doc.css("span#printTitle").text
-				org_nr = doc.css("span#printOrgnr").text
-				if not org_nr.blank? and not name.blank?
-					s = Search.new({:company_name => name, :org_number => org_nr})
-					if not Search.exists?(company_name: s.company_name)
-						s.save
+		doc.css("div.hitlistRow tr td span").each do |a|
+			if a.content =~ /Org\.nummer/i
+				org_number_td = a.parent
+				org_number_match = org_number_td.content.match (/\d{6}-\d{4}/)
+			 	# We have found an org. number now find the matching name
+				name_tr = org_number_td.parent.previous.previous
+				name_ahref = name_tr.css("td#hitlistName").css("a")
+				if (not name_ahref.empty?)
+					name = name_ahref.attribute('title').content
+					if not org_number_match.blank? and not name.blank?
+						s = Search.new({ :company_name => name, :org_number => org_number_match[0] })
+						# Avoid saving if we already have in cache
+						if Search.exists?(company_name: s.company_name) or s.save
+							hits << s
+						end
 					end
-					hits << s
 				end
-      end
-    end
+			end
+		end
 		hits
   end
 end

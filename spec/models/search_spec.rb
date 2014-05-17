@@ -5,15 +5,35 @@ describe Search do
   before(:each) do
     @attributes = {:company_name => 'Company AB', :org_number => '123456-4321'}
     @valid_company = {:company_name => 'Google Sweden AB', :org_number => '556656-6880'}
+		@google_companies = ['Google Sweden AB', 'GOOGLE COMMERCE LTD', 'GOOGLE COMMERCE LTD','GOOGLE INC.', 'GOOGLE IRELAND LTD']
   end
 
-  it 'should find Google on allabolag' do
+  it 'should find Google Sweden on allabolag' do
     VCR.use_cassette('google_search') do
       results = Search.do_search(@valid_company[:company_name])
 			expect(results.find { |result| result[:org_number] == @valid_company[:org_number]})
     end
 	end
 
+	it 'should find all companies for Google' do
+		VCR.use_cassette('all_google_companies_search)') do
+			results = Search.do_search("google");
+			@google_companies.each do |company|
+				expect(results.find { |result| result[:company_name] == company})
+			end
+		end
+	end
+
+
+	it 'should find all companies for Google when results are cached' do
+		VCR.use_cassette('all_google_companies_search)') do
+			Search.do_search("google");
+			results = Search.do_search("google");
+			@google_companies.each do |company|
+				expect(results.find { |result| result[:company_name] == company})
+			end
+		end
+	end
 	it "should find cached companies" do
 		s = Search.create!(@valid_company)
 		results = Search.do_search(@valid_company[:company_name])
